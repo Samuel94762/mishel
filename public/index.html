@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tengo una pregunta importante para vos Mishel</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream: #faf7f2;
+        --rose-dust: #e8c4c4;
+        --rose-mid: #d4909a;
+        --burgundy: #7d2e46;
+        --burgundy-deep: #4a1628;
+        --gold: #c9a96e;
+        --text-main: #2c1a22;
+        --text-muted: #8b6070;
+        --white: #ffffff;
+        --shadow: 0 4px 40px rgba(125, 46, 70, 0.12);
+        --shadow-hover: 0 8px 60px rgba(125, 46, 70, 0.22);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--cream);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+      }
+
+      /* Fondo sutil con pétalos */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            ellipse at 20% 20%,
+            rgba(232, 196, 196, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 80%,
+            rgba(212, 144, 154, 0.2) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 560px;
+        margin: 2rem auto;
+        padding: 1rem;
+      }
+
+      /* ── TARJETA PRINCIPAL ── */
+      .card {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 3rem 3rem 2.5rem;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(232, 196, 196, 0.4);
+        text-align: center;
+        transition: box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* ── ORNAMENTO SUPERIOR ── */
+      .ornament {
+        font-size: 2.8rem;
+        margin-bottom: 1.25rem;
+        display: block;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* ── TIPOGRAFÍA ── */
+      .eyebrow {
+        font-family: "Inter", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--rose-mid);
+        margin-bottom: 0.75rem;
+      }
+
+      .headline {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        font-weight: 700;
+        color: var(--burgundy-deep);
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+
+      .headline em {
+        font-style: italic;
+        color: var(--burgundy);
+      }
+
+      .subtext {
+        font-size: 0.95rem;
+        font-weight: 300;
+        color: var(--text-muted);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        max-width: 380px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .divider {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+        margin: 1.5rem auto;
+      }
+
+      /* ── BOTONES ── */
+      .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+        margin-top: 0.5rem;
+        position: relative;
+        min-height: 60px;
+      }
+
+      .btn {
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        padding: 0.85rem 2.2rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        position: relative;
+        user-select: none;
+      }
+
+      .btn-si {
+        background: linear-gradient(
+          135deg,
+          var(--burgundy),
+          var(--burgundy-deep)
+        );
+        color: var(--white);
+        box-shadow: 0 4px 20px rgba(125, 46, 70, 0.35);
+      }
+
+      .btn-si:hover {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 8px 30px rgba(125, 46, 70, 0.45);
+      }
+
+      .btn-si:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .btn-no {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1.5px solid rgba(139, 96, 112, 0.3);
+        font-size: 0.8rem;
+        padding: 0.7rem 1.5rem;
+        position: absolute;
+        transition: none; /* sin transición para que el movimiento sea instantáneo */
+        white-space: nowrap;
+      }
+
+      /* Mensajes cómicos cuando intentan hacer click en No */
+      .no-toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: var(--burgundy-deep);
+        color: var(--white);
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-family: "Inter", sans-serif;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000;
+        text-align: center;
+        max-width: 90vw;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+      }
+
+      .no-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* ── FASE 2: SELECTOR DE CITA ── */
+      .phase {
+        display: none;
+        animation: fadeInUp 0.6s ease forwards;
+      }
+
+      .phase.active {
+        display: block;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-section {
+        margin-top: 1.5rem;
+        text-align: left;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border: 1.5px solid rgba(212, 144, 154, 0.3);
+        border-radius: 12px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        background: var(--cream);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        outline: none;
+        appearance: none;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--rose-mid);
+        box-shadow: 0 0 0 3px rgba(212, 144, 154, 0.15);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 90px;
+        font-size: 0.88rem;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .btn-confirmar {
+        width: 100%;
+        background: linear-gradient(
+          135deg,
+          var(--burgundy),
+          var(--burgundy-deep)
+        );
+        color: var(--white);
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        padding: 1rem;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 20px rgba(125, 46, 70, 0.3);
+        transition: all 0.25s ease;
+      }
+
+      .btn-confirmar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(125, 46, 70, 0.4);
+      }
+
+      /* ── FASE 3: CONFIRMACIÓN ── */
+      .confirmation-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        70% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .confirmation-details {
+        background: var(--cream);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+        text-align: left;
+        border: 1px solid rgba(212, 144, 154, 0.2);
+      }
+
+      .detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.88rem;
+      }
+
+      .detail-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .detail-icon {
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: var(--burgundy);
+        font-size: 0.75rem;
+        display: block;
+        letter-spacing: 0.05em;
+      }
+
+      .detail-value {
+        color: var(--text-main);
+      }
+
+      /* ── CONFETTI ── */
+      .confetti-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 999;
+        overflow: hidden;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        animation: confettiFall linear forwards;
+        top: -10px;
+      }
+
+      @keyframes confettiFall {
+        0% {
+          transform: translateY(0) rotate(0deg) translateX(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(720deg) translateX(var(--drift));
+          opacity: 0;
+        }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 480px) {
+        .card {
+          padding: 2rem 1.5rem;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .btn-group {
+          flex-direction: column;
+          min-height: 130px;
+        }
+      }
+
+      /* Estado de carga del botón */
+      .btn-confirmar.loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .error-msg {
+        color: #c0392b;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast para el botón No -->
+    <div class="no-toast" id="noToast"></div>
+
+    <!-- Confetti container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <div class="container">
+      <div class="card">
+        <!-- ── FASE 1: LA PREGUNTA ── -->
+        <div class="phase active" id="phase1">
+          <p class="eyebrow">Hola Mishel</p>
+          <h1 class="headline">¿Te gustaría <em>salir conmigo?</em></h1>
+          <div class="divider"></div>
+          <p class="subtext">
+            Cuando estés libre y termines tus exámenes claro, hay que celebrar,
+            aquí me decís la fecha y qué te late hacer
+          </p>
+          <div class="btn-group" id="btnGroup">
+            <button class="btn btn-si" onclick="handleSi()">
+              Sí, claro que sí
+            </button>
+            <button
+              class="btn btn-no"
+              id="btnNo"
+              onmouseenter="escaparBoton()"
+              ontouchstart="catchNo()"
+            >
+              No, claro que no
+            </button>
+          </div>
+        </div>
+
+        <!-- ── FASE 2: ELEGIR FECHA ── -->
+        <div class="phase" id="phase2">
+          <p class="eyebrow">Perfectooo!! — sabía que dirías que sí</p>
+          <h2 class="headline">Ahora dime, <em>¿cuándo?</em></h2>
+          <div class="divider"></div>
+          <p class="subtext">
+            Elige la fecha y lugar, el resto lo organizo yo. Vos centrate en tus
+            exámenes :)
+          </p>
+
+          <div class="form-section">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" name="fecha" required min="" />
+              </div>
+              <div class="form-group">
+                <label for="hora">Hora</label>
+                <input
+                  type="time"
+                  id="hora"
+                  name="hora"
+                  required
+                  value="19:00"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lugar">¿Dónde te gustaría ir?</label>
+              <select id="lugar" name="lugar">
+                <option value="">Vos elegís...</option>
+                <option value="Un restaurante elegante">
+                  🍽️ Un restaurante elegante
+                </option>
+                <option value="Un café íntimo">☕ Un café</option>
+                <option value="Un paseo por el parque">
+                  🌳 Un paseo por el parque
+                </option>
+                <option value="Una cena con vista">
+                  🌆 Una cena con vista
+                </option>
+                <option value="El cine">🎬 El cine</option>
+                <option value="Sorpréndeme">✨ Sorpréndeme</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="nota"> Algo que deba saber (opcional)</label>
+              <textarea
+                id="nota"
+                name="nota"
+                placeholder="Alergias, comida favorita, lo que querrás..."
+              ></textarea>
+            </div>
+
+            <button
+              class="btn-confirmar"
+              id="btnConfirmar"
+              onclick="confirmarCita()"
+            >
+              Confirmar cita
+            </button>
+            <div class="error-msg" id="errorMsg"></div>
+          </div>
+        </div>
+
+        <!-- ── FASE 3: CONFIRMACIÓN ── -->
+        <div class="phase" id="phase3">
+          <p class="eyebrow">Cita confirmada</p>
+          <h2 class="headline"><em>Va a estar </em> súper, lo prometo</h2>
+          <div class="divider"></div>
+          <p class="subtext">
+            Ya cuento los días. Mientras tanto, estudia mucho, que te vaya muy
+            bien, te voy a estar molestando para ver qué tal te va :3
+          </p>
+
+          <div class="confirmation-details" id="confirmationDetails">
+            <!-- Se llena dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ── CONFIGURACIÓN ──
+      const API_BASE = window.location.origin;
+
+      // Frases cómicas cuando intentan presionar No
+      const frasesNo = [
+        "Ese botón está en mantenimiento",
+        "Error 404: opción 'No' no encontrada",
+        "A ver, trata de nuevo",
+        "Mmm, parece que no funciona el No, que raro",
+        "Uh dale, sé que si querés",
+        "Ese botón fue eliminado por inactividad :)",
+        "¡Casi!",
+        "Hm, raro. Vuelve a intentar",
+        "El No está bloqueado por el destino",
+      ];
+
+      let noCount = 0;
+      let toastTimeout = null;
+
+      // El botón No huye del cursor
+      function escaparBoton() {
+        const btn = document.getElementById("btnNo");
+        const group = document.getElementById("btnGroup");
+        const groupRect = group.getBoundingClientRect();
+        const cardRect = btn.closest(".card").getBoundingClientRect();
+
+        // Área disponible para escapar (relativo al card)
+        const maxX = cardRect.width - btn.offsetWidth - 20;
+        const maxY = cardRect.height - btn.offsetHeight - 20;
+
+        const newLeft = Math.random() * maxX;
+        const newTop = Math.random() * maxY;
+
+        btn.style.position = "absolute";
+        btn.style.left = newLeft + "px";
+        btn.style.top = newTop + "px";
+
+        // Mostrar frase
+        mostrarToast(frasesNo[noCount % frasesNo.length]);
+        noCount++;
+      }
+
+      // Para móvil: si lo tocan igual muestra mensaje
+      function catchNo() {
+        escaparBoton();
+        mostrarToast("¡Casi! Intenta de nuevo :)");
+      }
+
+      function mostrarToast(texto) {
+        const toast = document.getElementById("noToast");
+        toast.textContent = texto;
+        toast.classList.add("show");
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove("show"), 2500);
+      }
+
+      // ── FASE 1 → 2 ──
+      function handleSi() {
+        document.getElementById("phase1").classList.remove("active");
+        document.getElementById("phase2").classList.add("active");
+
+        // Establecer fecha mínima = mañana
+        const manana = new Date();
+        manana.setDate(manana.getDate() + 1);
+        document.getElementById("fecha").min = manana
+          .toISOString()
+          .split("T")[0];
+      }
+
+      // ── CONFIRMAR CITA ──
+      async function confirmarCita() {
+        const fecha = document.getElementById("fecha").value;
+        const hora = document.getElementById("hora").value;
+        const lugar = document.getElementById("lugar").value;
+        const nota = document.getElementById("nota").value;
+        const errorMsg = document.getElementById("errorMsg");
+        const btn = document.getElementById("btnConfirmar");
+
+        errorMsg.textContent = "";
+
+        if (!fecha) {
+          errorMsg.textContent = "Por favor elige una fecha";
+          return;
+        }
+        if (!hora) {
+          errorMsg.textContent = "Por favor elige una hora";
+          return;
+        }
+        if (!lugar) {
+          errorMsg.textContent = "Elige el lugar por fa";
+          return;
+        }
+
+        btn.textContent = "Guardando...";
+        btn.classList.add("loading");
+        btn.disabled = true;
+
+        try {
+          const res = await fetch(`${API_BASE}/api/cita`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ respuesta: "si", fecha, hora, lugar, nota }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) throw new Error(data.error || "Error desconocido");
+
+          // Formatear fecha para mostrar
+          const fechaFormateada = new Date(
+            fecha + "T12:00:00",
+          ).toLocaleDateString("es-ES", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          // Llenar detalles de confirmación
+          document.getElementById("confirmationDetails").innerHTML = `
+          <div class="detail-row">
+            <span class="detail-icon">📆</span>
+            <div>
+              <span class="detail-label">Fecha</span>
+              <span class="detail-value">${fechaFormateada}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <div>
+              <span class="detail-label">Hora</span>
+              <span class="detail-value">${hora} hrs</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📍</span>
+            <div>
+              <span class="detail-label">Lugar</span>
+              <span class="detail-value">${lugar}</span>
+            </div>
+          </div>
+          ${
+            nota
+              ? `
+          <div class="detail-row">
+            <span class="detail-icon">💌</span>
+            <div>
+              <span class="detail-label">Tu nota</span>
+              <span class="detail-value">${nota}</span>
+            </div>
+          </div>`
+              : ""
+          }
+        `;
+
+          // Ir a fase 3
+          document.getElementById("phase2").classList.remove("active");
+          document.getElementById("phase3").classList.add("active");
+
+          // Confetti 🎉
+          lanzarConfetti();
+        } catch (error) {
+          errorMsg.textContent = "❌ " + error.message;
+          btn.textContent = "Confirmar nuestra cita ✨";
+          btn.classList.remove("loading");
+          btn.disabled = false;
+        }
+      }
+
+      // ── CONFETTI ──
+      function lanzarConfetti() {
+        const colores = [
+          "#D4909A",
+          "#C9A96E",
+          "#7D2E46",
+          "#E8C4C4",
+          "#FAD0C4",
+          "#FFFFFF",
+        ];
+        const container = document.getElementById("confettiContainer");
+
+        for (let i = 0; i < 80; i++) {
+          setTimeout(() => {
+            const piece = document.createElement("div");
+            piece.classList.add("confetti-piece");
+            const color = colores[Math.floor(Math.random() * colores.length)];
+            const drift = (Math.random() - 0.5) * 200;
+            piece.style.cssText = `
+            left: ${Math.random() * 100}%;
+            background: ${color};
+            width: ${4 + Math.random() * 8}px;
+            height: ${4 + Math.random() * 8}px;
+            border-radius: ${Math.random() > 0.5 ? "50%" : "2px"};
+            animation-duration: ${1.5 + Math.random() * 2}s;
+            animation-delay: ${Math.random() * 0.5}s;
+            --drift: ${drift}px;
+          `;
+            container.appendChild(piece);
+            setTimeout(() => piece.remove(), 4000);
+          }, i * 30);
+        }
+      }
+
+      // ── POSICIONAR EL BOTÓN NO INICIALMENTE ──
+      window.addEventListener("load", () => {
+        const btn = document.getElementById("btnNo");
+        btn.style.position = "absolute";
+        btn.style.right = "0";
+        btn.style.top = "50%";
+        btn.style.transform = "translateY(-50%)";
+      });
+    </script>
+  </body>
+</html>
