@@ -42,7 +42,6 @@
         overflow-x: hidden;
       }
 
-      /* Fondo sutil con pétalos */
       body::before {
         content: "";
         position: fixed;
@@ -71,7 +70,6 @@
         padding: 1rem;
       }
 
-      /* ── TARJETA PRINCIPAL ── */
       .card {
         background: var(--white);
         border-radius: 24px;
@@ -80,13 +78,13 @@
         border: 1px solid rgba(232, 196, 196, 0.4);
         text-align: center;
         transition: box-shadow 0.3s ease;
+        position: relative;
       }
 
       .card:hover {
         box-shadow: var(--shadow-hover);
       }
 
-      /* ── ORNAMENTO SUPERIOR ── */
       .ornament {
         font-size: 2.8rem;
         margin-bottom: 1.25rem;
@@ -104,7 +102,6 @@
         }
       }
 
-      /* ── TIPOGRAFÍA ── */
       .eyebrow {
         font-family: "Inter", sans-serif;
         font-size: 0.7rem;
@@ -152,7 +149,6 @@
         margin: 1.5rem auto;
       }
 
-      /* ── BOTONES ── */
       .btn-group {
         display: flex;
         gap: 1rem;
@@ -203,11 +199,13 @@
         font-size: 0.8rem;
         padding: 0.7rem 1.5rem;
         position: absolute;
-        transition: none; /* sin transición para que el movimiento sea instantáneo */
         white-space: nowrap;
+        /* Animación con rebote suave — se siente vivo */
+        transition:
+          left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+          top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
-      /* Mensajes cómicos cuando intentan hacer click en No */
       .no-toast {
         position: fixed;
         bottom: 2rem;
@@ -233,12 +231,10 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* ── FASE 2: SELECTOR DE CITA ── */
       .phase {
         display: none;
         animation: fadeInUp 0.6s ease forwards;
       }
-
       .phase.active {
         display: block;
       }
@@ -258,7 +254,6 @@
         margin-top: 1.5rem;
         text-align: left;
       }
-
       .form-group {
         margin-bottom: 1.25rem;
       }
@@ -303,7 +298,6 @@
         min-height: 90px;
         font-size: 0.88rem;
       }
-
       .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -336,7 +330,6 @@
         box-shadow: 0 8px 30px rgba(125, 46, 70, 0.4);
       }
 
-      /* ── FASE 3: CONFIRMACIÓN ── */
       .confirmation-icon {
         font-size: 4rem;
         margin-bottom: 1rem;
@@ -378,12 +371,10 @@
       .detail-row:last-child {
         margin-bottom: 0;
       }
-
       .detail-icon {
         font-size: 1rem;
         flex-shrink: 0;
       }
-
       .detail-label {
         font-weight: 600;
         color: var(--burgundy);
@@ -391,12 +382,10 @@
         display: block;
         letter-spacing: 0.05em;
       }
-
       .detail-value {
         color: var(--text-main);
       }
 
-      /* ── CONFETTI ── */
       .confetti-container {
         position: fixed;
         top: 0;
@@ -428,7 +417,6 @@
         }
       }
 
-      /* ── RESPONSIVE ── */
       @media (max-width: 480px) {
         .card {
           padding: 2rem 1.5rem;
@@ -442,12 +430,10 @@
         }
       }
 
-      /* Estado de carga del botón */
       .btn-confirmar.loading {
         opacity: 0.7;
         cursor: not-allowed;
       }
-
       .error-msg {
         color: #c0392b;
         font-size: 0.8rem;
@@ -457,15 +443,12 @@
     </style>
   </head>
   <body>
-    <!-- Toast para el botón No -->
     <div class="no-toast" id="noToast"></div>
-
-    <!-- Confetti container -->
     <div class="confetti-container" id="confettiContainer"></div>
 
     <div class="container">
-      <div class="card">
-        <!-- ── FASE 1: LA PREGUNTA ── -->
+      <div class="card" id="mainCard">
+        <!-- FASE 1 -->
         <div class="phase active" id="phase1">
           <p class="eyebrow">Hola Mishel</p>
           <h1 class="headline">¿Te gustaría <em>salir conmigo?</em></h1>
@@ -489,7 +472,7 @@
           </div>
         </div>
 
-        <!-- ── FASE 2: ELEGIR FECHA ── -->
+        <!-- FASE 2 -->
         <div class="phase" id="phase2">
           <p class="eyebrow">Perfectooo!! — sabía que dirías que sí</p>
           <h2 class="headline">Ahora dime, <em>¿cuándo?</em></h2>
@@ -537,7 +520,7 @@
             </div>
 
             <div class="form-group">
-              <label for="nota"> Algo que deba saber (opcional)</label>
+              <label for="nota">Algo que deba saber (opcional)</label>
               <textarea
                 id="nota"
                 name="nota"
@@ -556,7 +539,7 @@
           </div>
         </div>
 
-        <!-- ── FASE 3: CONFIRMACIÓN ── -->
+        <!-- FASE 3 -->
         <div class="phase" id="phase3">
           <p class="eyebrow">Cita confirmada</p>
           <h2 class="headline"><em>Va a estar </em> súper, lo prometo</h2>
@@ -565,19 +548,14 @@
             Ya cuento los días. Mientras tanto, estudia mucho, que te vaya muy
             bien, te voy a estar molestando para ver qué tal te va :3
           </p>
-
-          <div class="confirmation-details" id="confirmationDetails">
-            <!-- Se llena dinámicamente -->
-          </div>
+          <div class="confirmation-details" id="confirmationDetails"></div>
         </div>
       </div>
     </div>
 
     <script>
-      // ── CONFIGURACIÓN ──
       const API_BASE = window.location.origin;
 
-      // Frases cómicas cuando intentan presionar No
       const frasesNo = [
         "Ese botón está en mantenimiento",
         "Error 404: opción 'No' no encontrada",
@@ -592,34 +570,48 @@
 
       let noCount = 0;
       let toastTimeout = null;
+      let posicionada = false; // si ya se estableció left/top en px (sin transform)
 
-      // El botón No huye del cursor
       function escaparBoton() {
         const btn = document.getElementById("btnNo");
-        const group = document.getElementById("btnGroup");
-        const groupRect = group.getBoundingClientRect();
-        const cardRect = btn.closest(".card").getBoundingClientRect();
+        const card = document.getElementById("mainCard");
 
-        // Área disponible para escapar (relativo al card)
-        const maxX = cardRect.width - btn.offsetWidth - 20;
-        const maxY = cardRect.height - btn.offsetHeight - 20;
+        const cardW = card.offsetWidth;
+        const cardH = card.offsetHeight;
+        const btnW = btn.offsetWidth;
+        const btnH = btn.offsetHeight;
+        const pad = 16;
 
-        const newLeft = Math.random() * maxX;
-        const newTop = Math.random() * maxY;
+        const newLeft = pad + Math.random() * (cardW - btnW - pad * 2);
+        const newTop = pad + Math.random() * (cardH - btnH - pad * 2);
 
-        btn.style.position = "absolute";
+        // Primera vez: quitar el transform y poner left/top en px
+        // para que la transición CSS funcione correctamente desde ahí
+        if (!posicionada) {
+          btn.style.transition = "none"; // sin anim en el primer salto
+          btn.style.transform = "none";
+          // Calcular posición actual a partir del transform anterior
+          const rect = btn.getBoundingClientRect();
+          const cardRect = card.getBoundingClientRect();
+          btn.style.left = rect.left - cardRect.left + "px";
+          btn.style.top = rect.top - cardRect.top + "px";
+          btn.style.right = "auto";
+          // Forzar reflow para que el navegador registre la posición sin anim
+          btn.getBoundingClientRect();
+          // Ahora sí activar la transición
+          btn.style.transition = "";
+          posicionada = true;
+        }
+
         btn.style.left = newLeft + "px";
         btn.style.top = newTop + "px";
 
-        // Mostrar frase
         mostrarToast(frasesNo[noCount % frasesNo.length]);
         noCount++;
       }
 
-      // Para móvil: si lo tocan igual muestra mensaje
       function catchNo() {
         escaparBoton();
-        mostrarToast("¡Casi! Intenta de nuevo :)");
       }
 
       function mostrarToast(texto) {
@@ -630,12 +622,9 @@
         toastTimeout = setTimeout(() => toast.classList.remove("show"), 2500);
       }
 
-      // ── FASE 1 → 2 ──
       function handleSi() {
         document.getElementById("phase1").classList.remove("active");
         document.getElementById("phase2").classList.add("active");
-
-        // Establecer fecha mínima = mañana
         const manana = new Date();
         manana.setDate(manana.getDate() + 1);
         document.getElementById("fecha").min = manana
@@ -643,7 +632,6 @@
           .split("T")[0];
       }
 
-      // ── CONFIRMAR CITA ──
       async function confirmarCita() {
         const fecha = document.getElementById("fecha").value;
         const hora = document.getElementById("hora").value;
@@ -653,7 +641,6 @@
         const btn = document.getElementById("btnConfirmar");
 
         errorMsg.textContent = "";
-
         if (!fecha) {
           errorMsg.textContent = "Por favor elige una fecha";
           return;
@@ -677,12 +664,9 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ respuesta: "si", fecha, hora, lugar, nota }),
           });
-
           const data = await res.json();
-
           if (!res.ok) throw new Error(data.error || "Error desconocido");
 
-          // Formatear fecha para mostrar
           const fechaFormateada = new Date(
             fecha + "T12:00:00",
           ).toLocaleDateString("es-ES", {
@@ -692,48 +676,31 @@
             day: "numeric",
           });
 
-          // Llenar detalles de confirmación
           document.getElementById("confirmationDetails").innerHTML = `
-          <div class="detail-row">
-            <span class="detail-icon">📆</span>
-            <div>
-              <span class="detail-label">Fecha</span>
-              <span class="detail-value">${fechaFormateada}</span>
+            <div class="detail-row">
+              <span class="detail-icon">📆</span>
+              <div><span class="detail-label">Fecha</span><span class="detail-value">${fechaFormateada}</span></div>
             </div>
-          </div>
-          <div class="detail-row">
-            <span class="detail-icon">🕐</span>
-            <div>
-              <span class="detail-label">Hora</span>
-              <span class="detail-value">${hora} hrs</span>
+            <div class="detail-row">
+              <span class="detail-icon">🕐</span>
+              <div><span class="detail-label">Hora</span><span class="detail-value">${hora} hrs</span></div>
             </div>
-          </div>
-          <div class="detail-row">
-            <span class="detail-icon">📍</span>
-            <div>
-              <span class="detail-label">Lugar</span>
-              <span class="detail-value">${lugar}</span>
+            <div class="detail-row">
+              <span class="detail-icon">📍</span>
+              <div><span class="detail-label">Lugar</span><span class="detail-value">${lugar}</span></div>
             </div>
-          </div>
-          ${
-            nota
-              ? `
-          <div class="detail-row">
-            <span class="detail-icon">💌</span>
-            <div>
-              <span class="detail-label">Tu nota</span>
-              <span class="detail-value">${nota}</span>
-            </div>
-          </div>`
-              : ""
-          }
-        `;
+            ${
+              nota
+                ? `<div class="detail-row">
+              <span class="detail-icon">💌</span>
+              <div><span class="detail-label">Tu nota</span><span class="detail-value">${nota}</span></div>
+            </div>`
+                : ""
+            }
+          `;
 
-          // Ir a fase 3
           document.getElementById("phase2").classList.remove("active");
           document.getElementById("phase3").classList.add("active");
-
-          // Confetti 🎉
           lanzarConfetti();
         } catch (error) {
           errorMsg.textContent = "❌ " + error.message;
@@ -743,7 +710,6 @@
         }
       }
 
-      // ── CONFETTI ──
       function lanzarConfetti() {
         const colores = [
           "#D4909A",
@@ -754,30 +720,27 @@
           "#FFFFFF",
         ];
         const container = document.getElementById("confettiContainer");
-
         for (let i = 0; i < 80; i++) {
           setTimeout(() => {
             const piece = document.createElement("div");
             piece.classList.add("confetti-piece");
-            const color = colores[Math.floor(Math.random() * colores.length)];
             const drift = (Math.random() - 0.5) * 200;
             piece.style.cssText = `
-            left: ${Math.random() * 100}%;
-            background: ${color};
-            width: ${4 + Math.random() * 8}px;
-            height: ${4 + Math.random() * 8}px;
-            border-radius: ${Math.random() > 0.5 ? "50%" : "2px"};
-            animation-duration: ${1.5 + Math.random() * 2}s;
-            animation-delay: ${Math.random() * 0.5}s;
-            --drift: ${drift}px;
-          `;
+              left: ${Math.random() * 100}%;
+              background: ${colores[Math.floor(Math.random() * colores.length)]};
+              width: ${4 + Math.random() * 8}px;
+              height: ${4 + Math.random() * 8}px;
+              border-radius: ${Math.random() > 0.5 ? "50%" : "2px"};
+              animation-duration: ${1.5 + Math.random() * 2}s;
+              animation-delay: ${Math.random() * 0.5}s;
+              --drift: ${drift}px;
+            `;
             container.appendChild(piece);
             setTimeout(() => piece.remove(), 4000);
           }, i * 30);
         }
       }
 
-      // ── POSICIONAR EL BOTÓN NO INICIALMENTE ──
       window.addEventListener("load", () => {
         const btn = document.getElementById("btnNo");
         btn.style.position = "absolute";
